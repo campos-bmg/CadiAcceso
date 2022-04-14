@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="18730086.png" />
+    <None Remove="Close.png" />
+    <None Remove="Close_hover.png" />
+    <None Remove="Fonts\Oswald-Medium.ttf" />
+    <None Remove="Fonts\Oswald.ttf" />
+    <None Remove="img\1x\Close.png" />
+    <None Remove="img\1x\Close_hover.png" />
+    <None Remove="img\1x\max.png" />
+    <None Remove="img\1x\max_hover.png" />
+    <None Remove="img\1x\Min.png" />
+    <None Remove="img\1x\Min_hover.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\Oswald-Medium.ttf" />
+    <Resource Include="img\1x\Close.png" />
+    <Resource Include="img\1x\Close_hover.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="18730086.png" />
+    <Resource Include="Close.png" />
+    <Resource Include="Close_hover.png" />
+    <Resource Include="img\1x\max.png" />
+    <Resource Include="img\1x\max_hover.png" />
+    <Resource Include="img\1x\Min.png" />
+    <Resource Include="img\1x\Min_hover.png" />
+  </ItemGroup>
+
+</Project>
