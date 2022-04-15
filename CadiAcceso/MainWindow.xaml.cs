@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -18,19 +19,22 @@ namespace CadiAcceso
             //Se activa el foco en el cuadro de texto invisible...
             //...para que el escaner escriba en el sin acción por...
             //...parte del usuario
+            txtMatricula.IsReadOnly = true;
             txtMatricula.Focus();
+            ClearData();
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
             /*
              Al cambiar el tamaño de la ventana (aumentar o reducir)
             Se manda a llamar a la función Reescalado que cambia el tamaño
             del texto acorde al tamaño de la ventana, le pasamos como parametro
             el tamaño actual de la ventana para que realice el calculo
              */
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        { 
             Reescalado(Ventana.Height);   
         }
+
         /*Función reescalado que acepta como argumento un
          dato de tipo double con el alto de la ventana para que realice
         el calculo y asigne el tamaño adecuado al texto
@@ -47,43 +51,54 @@ namespace CadiAcceso
             lblModalidad.FontSize = AltoVentana / factorEscalado;
             lblMatricula.FontSize = AltoVentana / factorEscalado;
         }
-
+        
+         //Función que ocurre al pasar el mouse sobre el boton cerrar
+         
         private void btnClose_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            //Nuevo objeto de tipo imageBrush
            ImageBrush b = new ImageBrush();
+            //Seteamos la propiedad imagesource del objeto recien creado a un bitmap
+            //en una uri que apunta a la imagen Close_hover.png dentro de los archivos de la aplicación
              b.ImageSource = new BitmapImage(new Uri(@"pack://application:,,,/img/1x/Close_hover.png"));
+            //Asignamos como relleno de el botón close el objeto b con la imagen antes mencionada
              btnClose.Fill = b;
         }
-
+        //Función que ocurre al retirar el mouse del boton cerrar
+        //Trabaja de la misma manera que la anterior, solo que ahora el relleno es 
+        //la imagen Close.png que es su estado normal y por defecto
         private void btnClose_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             ImageBrush b = new ImageBrush();
             b.ImageSource = new BitmapImage(new Uri(@"pack://application:,,,/img/1x/Close.png"));
             btnClose.Fill = b;
         }
-
+        //Se cierra la ventana al hacer click sobre el boton Close
         private void btnClose_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             this.Close();
         }
-
+        //Se ejecuta al pasar el mouse sobre el boton Maximizar/minimizar
         private void btnMax_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
+           //Si el estado de la ventana es normal
             if(this.WindowState == WindowState.Normal)
-            {
+            {   //Se cambia la imagen de fondo de btnMax por Max_hover.png
                 ImageBrush b = new ImageBrush();
                 b.ImageSource = new BitmapImage(new Uri(@"pack://application:,,,/img/1x/Max_hover.png"));
                 btnMax.Fill = b;
             }
+            //Si el estado de la ventana es maximizado
             else if(this.WindowState == WindowState.Maximized)
-            {
+            {   //Se cambia la imagen de fondo de btnMax por Min_hover 
+                //Se usa esta imagen para diferenciar el boton de maximizar por el de restaurar
                 ImageBrush b = new ImageBrush();
                 b.ImageSource = new BitmapImage(new Uri(@"pack://application:,,,/img/1x/Min_hover.png"));
                 btnMax.Fill = b;
             }
             
         }
-
+        //Esto restablece las imagenes de fondo por defecto de btnMax cuando se retira el mouse
         private void btnMax_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (this.WindowState == WindowState.Normal)
@@ -99,9 +114,9 @@ namespace CadiAcceso
                 btnMax.Fill = b;
             }
         }
-
+        //Ocurre cuando se levanta el click sobre el boton btnMax
         private void btnMax_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
+        {   //Si la ventana está normal, la maximiza y cambia su icono del boton
             if (this.WindowState == WindowState.Normal)
             {
                 this.WindowState = WindowState.Maximized;
@@ -109,6 +124,7 @@ namespace CadiAcceso
                 b.ImageSource = new BitmapImage(new Uri(@"pack://application:,,,/img/1x/Min.png"));
                 btnMax.Fill = b;
             }
+            //Si la ventana está maximizada, la pone en estado normal y cambia su icono del boton
             else if (this.WindowState == WindowState.Maximized)
             {
                 this.WindowState= WindowState.Normal;
@@ -116,44 +132,74 @@ namespace CadiAcceso
                 b.ImageSource = new BitmapImage(new Uri(@"pack://application:,,,/img/1x/Max.png"));
                 btnMax.Fill = b;
             }
+            //Cada que ocurre un cambio de estado de la ventana por el boton btnMax
+            //se manda a reescalar la fuente, se manda como parametro para el reescalado la 
+            //altura actual de la ventana
             Reescalado(this.ActualHeight);
         }
-
+        //Cada que se levanta la presión de una tecla del teclado dentro del textbox txtMatricula
         private void txtMatricula_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == System.Windows.Input.Key.Enter)
-            {
-                bool numeros = true;
-               foreach(char c in txtMatricula.Text)
-                {
-                    switch (c)
-                    {
+            //Se evalua, si la tecla recién presionada es igual a Enter
+            //Esto funciona por que el lector de codigo de barras debe envíar un
+            //Enter cada que realiza una lectura
+            if (!txtMatricula.IsReadOnly) { 
 
-                        case '1': break;
-                        case '2': break;
-                        case '3': break;
-                        case '4': break;
-                        case '5': break;
-                        case '6': break;
-                        case '7': break;
-                        case '8': break;
-                        case '9': break;
-                        case '0': break;
+                if (e.Key == System.Windows.Input.Key.Enter)
+                {
+                    string matriculaclean = "";
+                    //bandera que evalua si se ingresaron solo numeros, por defecto es true
+                    bool numeros = true;
+                    //ciclo que evalua cada caracter de la cadena ingresada en txtMatricula
+                    foreach (char c in txtMatricula.Text)
+                    {
+                        //switch que evalua el caracter actual de la cadena
+                        //Si es un digito (1,2,3,4,5,6,7,8,9,0) no hace nada
+                        //Si es otro caracter distinto, cambia el valor de la bandera a false
+                        switch (c)
+                        {
+
+                            case '1': matriculaclean += c; break;
+                            case '2': matriculaclean += c; break;
+                            case '3': matriculaclean += c; break;
+                            case '4': matriculaclean += c; break;
+                            case '5': matriculaclean += c; break;
+                            case '6': matriculaclean += c; break;
+                            case '7': matriculaclean += c; break;
+                            case '8': matriculaclean += c; break;
+                            case '9': matriculaclean += c; break;
+                            case '0': matriculaclean += c; break;
+                            case '+': break;
                             default: numeros = false; break;
 
+                        }
+                        //Invertimos el valor de numeros, si es verdadero (falso) quiere decir
+                        //Que se ingresó algún otro caracter en la posición actual y se rompe
+                        //el ciclo foreach
+                        if (!numeros) break;
                     }
-                   
-                }
-                if (numeros)
-                {
-                    lblNombre.Content = txtMatricula.Text;
-                    //consulta(txtMatricula.Text);
-                }
-                else
-                {
-                    MessageBox.Show("El código escaneado no es valido, intente de nuevo");
-                }
-                
+                    //Evaluamos la bandera numeros, si es verdadero quiere decir que todo es correcto
+                    //Si es falso quiere decir que se ingreso un caracter incorrecto
+                    if (numeros)
+                    {
+                        
+
+                        Consulta(matriculaclean);
+                        //consulta(txtMatricula.Text);
+                    }
+                    else
+                    {
+                        MessageBox.Show("El código escaneado no es valido, intente de nuevo");
+                        txtMatricula.Text = "";
+                    }
+                    txtMatricula.Text = "";
+                    txtMatricula.IsReadOnly = true;
+                } }
+            else if(e.Key == System.Windows.Input.Key.Add)
+            {
+                txtMatricula.Text = "";
+                txtMatricula.IsReadOnly = false;
+                MessageBox.Show("Yes! +");
             }
         }
 
@@ -165,6 +211,44 @@ namespace CadiAcceso
         private void Cuadricula_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             DragMove();
+        }
+
+        private void Consulta(string matricula)
+        {
+            string nombre, apellidos, semestre, modalidad, carrera;
+            //tu codigo de consulta empieza aquí
+
+
+
+
+            //Aqui quitas los valores que puse y pones los valores que obtuviste de la base
+            //de datos en las variables correspondientes
+            nombre = "Juan";
+            apellidos = "Perez Prado";
+            semestre = "Sexto";
+            modalidad = "Escolarizado";
+            carrera = "Ingeniería en sistemas";
+            //Aquí termina tu codigo de consulta
+            MostrarDatos(nombre, apellidos, semestre, matricula, modalidad, carrera);
+            
+        }
+        private void MostrarDatos(string nombre, string apellidos, string semestre, string matricula, string modalidad, string carrera)
+        {
+            lblNombre.Content = nombre+" "+apellidos;
+            lblSemestre.Content = semestre+" semestre";
+            lblMatricula.Content = matricula;
+            lblModalidad.Content = modalidad;
+            lblCarrera.Content = carrera;
+
+        }
+        private void ClearData()
+        {
+            lblNombre.Content = "Preparado para escanear...";
+            lblSemestre.Content = "";
+            lblModalidad.Content = "";
+            lblCarrera.Content = "";
+            lblMatricula.Content = "";
+            imgAlumno.Fill = new SolidColorBrush(Color.FromRgb(57, 62, 89));
         }
     }
 }
