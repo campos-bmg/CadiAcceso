@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace CadiAcceso
 {
@@ -12,6 +13,10 @@ namespace CadiAcceso
     public partial class MainWindow : Window
     {
         private int factorEscalado = 18;
+        private int tiempoMostrar = 5;
+        private int contador = 0;
+        private DispatcherTimer tmr = new DispatcherTimer();
+        
         public MainWindow()
         {
             //Se crea la ventana principal (y única)
@@ -22,6 +27,8 @@ namespace CadiAcceso
             txtMatricula.IsReadOnly = true;
             txtMatricula.Focus();
             ClearData();
+            tmr.Interval = TimeSpan.FromSeconds(1);
+            tmr.Tick += Tmr_Tick;
         }
 
             /*
@@ -199,7 +206,6 @@ namespace CadiAcceso
             {
                 txtMatricula.Text = "";
                 txtMatricula.IsReadOnly = false;
-                MessageBox.Show("Yes! +");
             }
         }
 
@@ -212,25 +218,40 @@ namespace CadiAcceso
         {
             DragMove();
         }
-
+        //Aqui te paso la string matricula como parametro para tu metodo, para que con ella hagas la
+        //busqueda en la base de datos
         private void Consulta(string matricula)
         {
             string nombre, apellidos, semestre, modalidad, carrera;
+            bool error = false;
             //tu codigo de consulta empieza aquí
 
 
-
-
+            //Asigna valor a la variable error, le asignas true si es que no se encontró nada en la base de datos
+            //o si en general no se pudo conectar con la base de datos, le asignas false cuando si se encuentre algo en
+            //la base de datos
+            if (error)
+            {//esta parte la dejas sin modificar
+                MostrarDatos();
+            }
             //Aqui quitas los valores que puse y pones los valores que obtuviste de la base
             //de datos en las variables correspondientes
-            nombre = "Juan";
-            apellidos = "Perez Prado";
-            semestre = "Sexto";
-            modalidad = "Escolarizado";
-            carrera = "Ingeniería en sistemas";
+            else
+            {
+                nombre = "Juan";
+                apellidos = "Perez Prado";
+                semestre = "Sexto";
+                modalidad = "Escolarizado";
+                carrera = "Ingeniería en sistemas";
+                MostrarDatos(nombre, apellidos, semestre, matricula, modalidad, carrera); 
+            }
             //Aquí termina tu codigo de consulta
-            MostrarDatos(nombre, apellidos, semestre, matricula, modalidad, carrera);
-            
+        }
+        private void MostrarDatos()
+        {
+            imgAlumno.Stroke = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+            lblNombre.Content = "No se encontró la matricula escaneada, intente de nuevo";
+            tmr.Start();
         }
         private void MostrarDatos(string nombre, string apellidos, string semestre, string matricula, string modalidad, string carrera)
         {
@@ -239,8 +260,22 @@ namespace CadiAcceso
             lblMatricula.Content = matricula;
             lblModalidad.Content = modalidad;
             lblCarrera.Content = carrera;
+            imgAlumno.Fill = new ImageBrush(new BitmapImage(new Uri($"http://cadi.calormex.com/img/{matricula}.jpg")));
+            tmr.Start();
 
         }
+
+        private void Tmr_Tick(object? sender, EventArgs e)
+        {
+            contador++;
+            if(contador >= tiempoMostrar)
+            {
+                contador = 0;
+                ClearData();
+                tmr.Stop();
+            }
+        }
+
         private void ClearData()
         {
             lblNombre.Content = "Preparado para escanear...";
@@ -248,6 +283,7 @@ namespace CadiAcceso
             lblModalidad.Content = "";
             lblCarrera.Content = "";
             lblMatricula.Content = "";
+            imgAlumno.Stroke = new SolidColorBrush(Color.FromArgb(116, 122, 155, 100));
             imgAlumno.Fill = new SolidColorBrush(Color.FromRgb(57, 62, 89));
         }
     }

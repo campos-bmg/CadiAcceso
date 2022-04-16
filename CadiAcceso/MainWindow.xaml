@@ -68,7 +68,10 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <Rectangle x:Name="imgAlumno" Stroke="#FF747A9B" RadiusX="10" RadiusY="10" MinWidth="180" Grid.Column="1" Margin="44,5,43,0">
+            <Rectangle x:Name="imgAlumno" Stroke="#FF747A9B" RadiusX="10" RadiusY="10" MinWidth="180" Grid.Column="1" Margin="44,8,43,8" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeThickness="2">
+                <Rectangle.Effect>
+                    <DropShadowEffect BlurRadius="6" ShadowDepth="-6" Color="Red" Direction="45"/>
+                </Rectangle.Effect>
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="/18730086.png" Stretch="UniformToFill"/>
                 </Rectangle.Fill>
