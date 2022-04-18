@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CadiAcceso"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="800" FontFamily="Oswald Medium" FontSize="18" Foreground="White" SizeChanged="Window_SizeChanged" WindowStartupLocation="CenterScreen" UseLayoutRounding="False" WindowStyle="None" Cursor="AppStarting">
+        Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="800" FontFamily="Oswald Medium" FontSize="18" Foreground="White" SizeChanged="Window_SizeChanged" WindowStartupLocation="CenterScreen" UseLayoutRounding="False" WindowStyle="None" Cursor="AppStarting" Background="#FF222536">
     <Window.Resources>
         <Style x:Key="MyButtonStyle" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -54,6 +54,16 @@
                 <VisualState x:Name="Hover"/>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        <Rectangle x:Name="btnClose" HorizontalAlignment="Right" Height="28" VerticalAlignment="Top" Width="28" MouseEnter="btnClose_MouseEnter" MouseLeave="btnClose_MouseLeave" Cursor="Hand" MouseLeftButtonUp="btnClose_MouseLeftButtonUp" Opacity="0.495">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="/Close.png"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Rectangle x:Name="btnMax" HorizontalAlignment="Right" Height="28" Margin="0,0,28,0" VerticalAlignment="Top" Width="28" Cursor="Hand" MouseEnter="btnMax_MouseEnter" MouseLeave="btnMax_MouseLeave" MouseLeftButtonUp="btnMax_MouseLeftButtonUp">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="/img/1x/max.png"/>
+            </Rectangle.Fill>
+        </Rectangle>
         <Grid x:Name="Cuadricula" MouseDown="Cuadricula_MouseDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
@@ -64,16 +74,17 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Rectangle x:Name="imgAlumno" Stroke="#FF747A9B" RadiusX="10" RadiusY="10" MinWidth="180" Grid.Column="1" Margin="44,8,43,8" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeThickness="2">
+            <Rectangle x:Name="imgAlumno" RadiusX="10" RadiusY="10" Grid.Column="1" Margin="0,11" StrokeThickness="2" HorizontalAlignment="Center">
                 <Rectangle.Effect>
-                    <DropShadowEffect BlurRadius="6" ShadowDepth="-6" Color="Red" Direction="45"/>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="-6" Color="Black" Direction="45"/>
                 </Rectangle.Effect>
+
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="/18730086.png" Stretch="UniformToFill"/>
+                    <ImageBrush ImageSource="/18730086.png" Stretch="Fill"/>
                 </Rectangle.Fill>
             </Rectangle>
             <Label x:Name="lblNombre" Content="Label" Grid.Row="1" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="25" FontStretch="Expanded" Grid.ColumnSpan="3">
@@ -87,15 +98,5 @@
             <Label x:Name="lblMatricula" Content="Label" Grid.Row="5" Grid.ColumnSpan="3" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25"/>
             <TextBox x:Name="txtMatricula" HorizontalAlignment="Left" Height="31" Margin="51,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" MaxLines="1" MaxLength="9" Opacity="0.005" LostFocus="txtMatricula_LostFocus" KeyDown="txtMatricula_KeyUp"/>
         </Grid>
-        <Rectangle x:Name="btnClose" HorizontalAlignment="Right" Height="28" VerticalAlignment="Top" Width="28" MouseEnter="btnClose_MouseEnter" MouseLeave="btnClose_MouseLeave" Cursor="Hand" MouseLeftButtonUp="btnClose_MouseLeftButtonUp" Opacity="0.495">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="/Close.png"/>
-            </Rectangle.Fill>
-        </Rectangle>
-        <Rectangle x:Name="btnMax" HorizontalAlignment="Right" Height="28" Margin="0,0,28,0" VerticalAlignment="Top" Width="28" Cursor="Hand" MouseEnter="btnMax_MouseEnter" MouseLeave="btnMax_MouseLeave" MouseLeftButtonUp="btnMax_MouseLeftButtonUp">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="/img/1x/max.png"/>
-            </Rectangle.Fill>
-        </Rectangle>
     </Grid>
 </Window>

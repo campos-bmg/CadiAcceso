@@ -27,6 +27,7 @@ namespace CadiAcceso
             txtMatricula.IsReadOnly = true;
             txtMatricula.Focus();
             ClearData();
+            imgAlumno.Width = 96.35;
             tmr.Interval = TimeSpan.FromSeconds(1);
             tmr.Tick += Tmr_Tick;
         }
@@ -52,6 +53,7 @@ namespace CadiAcceso
              Se divide el alto de la ventana obtenido al llamar a la función
             entre el factor de escalado para obtener el tamaño del texto adecuado
              */
+            imgAlumno.MinWidth = imgAlumno.ActualHeight / 4 * 3;
             lblNombre.FontSize = AltoVentana / factorEscalado;
             lblCarrera.FontSize = AltoVentana / factorEscalado;
             lblSemestre.FontSize = AltoVentana / factorEscalado;
@@ -223,7 +225,7 @@ namespace CadiAcceso
         private void Consulta(string matricula)
         {
             string nombre, apellidos, semestre, modalidad, carrera;
-            bool error = false;
+            bool error = true;
             //tu codigo de consulta empieza aquí
 
 
@@ -249,12 +251,13 @@ namespace CadiAcceso
         }
         private void MostrarDatos()
         {
-            imgAlumno.Stroke = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+            lblNombre.Foreground = new SolidColorBrush(Color.FromRgb(242,46,98));
             lblNombre.Content = "No se encontró la matricula escaneada, intente de nuevo";
             tmr.Start();
         }
         private void MostrarDatos(string nombre, string apellidos, string semestre, string matricula, string modalidad, string carrera)
         {
+            contador = 0;
             lblNombre.Content = nombre+" "+apellidos;
             lblSemestre.Content = semestre+" semestre";
             lblMatricula.Content = matricula;
@@ -283,7 +286,7 @@ namespace CadiAcceso
             lblModalidad.Content = "";
             lblCarrera.Content = "";
             lblMatricula.Content = "";
-            imgAlumno.Stroke = new SolidColorBrush(Color.FromArgb(116, 122, 155, 100));
+            lblNombre.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             imgAlumno.Fill = new SolidColorBrush(Color.FromRgb(57, 62, 89));
         }
     }
