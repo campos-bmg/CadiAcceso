@@ -96,7 +96,7 @@
             <Label x:Name="lblSemestre" Content="Label" Grid.Row="3" Grid.ColumnSpan="3" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25"/>
             <Label x:Name="lblModalidad" Content="Label" Grid.Row="4" Grid.ColumnSpan="3" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25"/>
             <Label x:Name="lblMatricula" Content="Label" Grid.Row="5" Grid.ColumnSpan="3" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25"/>
-            <TextBox x:Name="txtMatricula" HorizontalAlignment="Left" Height="31" Margin="51,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" MaxLines="1" MaxLength="9" Opacity="0.005" LostFocus="txtMatricula_LostFocus" KeyDown="txtMatricula_KeyUp"/>
+            <TextBox x:Name="txtMatricula" HorizontalAlignment="Left" Height="31" Margin="51,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" MaxLines="1" MaxLength="9" LostFocus="txtMatricula_LostFocus" KeyDown="txtMatricula_KeyUp" Opacity="0.0005" Cursor="Arrow"/>
         </Grid>
     </Grid>
 </Window>

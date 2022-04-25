@@ -10,15 +10,24 @@ namespace CadiAcceso
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+ 
     public partial class MainWindow : Window
     {
         private int factorEscalado = 18;
         private int tiempoMostrar = 5;
         private int contador = 0;
         private DispatcherTimer tmr = new DispatcherTimer();
-        
+        private Color _sombras = Color.FromRgb(0, 0, 0);
+        public Color sombras
+        {
+            get{ return _sombras; }
+            set{ _sombras = value; }
+
+        }
         public MainWindow()
         {
+            DataContext = this;
             //Se crea la ventana principal (y única)
             InitializeComponent();
             //Se activa el foco en el cuadro de texto invisible...
@@ -53,7 +62,7 @@ namespace CadiAcceso
              Se divide el alto de la ventana obtenido al llamar a la función
             entre el factor de escalado para obtener el tamaño del texto adecuado
              */
-            imgAlumno.MinWidth = imgAlumno.ActualHeight / 4 * 3;
+            imgAlumno.MinWidth = imgAlumno.ActualHeight / 3 * 2.5;
             lblNombre.FontSize = AltoVentana / factorEscalado;
             lblCarrera.FontSize = AltoVentana / factorEscalado;
             lblSemestre.FontSize = AltoVentana / factorEscalado;
@@ -149,6 +158,7 @@ namespace CadiAcceso
         //Cada que se levanta la presión de una tecla del teclado dentro del textbox txtMatricula
         private void txtMatricula_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            lblMatricula.Content = e.Key;
             //Se evalua, si la tecla recién presionada es igual a Enter
             //Esto funciona por que el lector de codigo de barras debe envíar un
             //Enter cada que realiza una lectura
@@ -156,6 +166,7 @@ namespace CadiAcceso
 
                 if (e.Key == System.Windows.Input.Key.Enter)
                 {
+                    //Variable para almacenar la matricula solo con digitos y eliminar el caracter '+'
                     string matriculaclean = "";
                     //bandera que evalua si se ingresaron solo numeros, por defecto es true
                     bool numeros = true;
@@ -163,8 +174,10 @@ namespace CadiAcceso
                     foreach (char c in txtMatricula.Text)
                     {
                         //switch que evalua el caracter actual de la cadena
-                        //Si es un digito (1,2,3,4,5,6,7,8,9,0) no hace nada
+                        //Si es un digito (1,2,3,4,5,6,7,8,9,0) o el simbolo '+' no hace nada
                         //Si es otro caracter distinto, cambia el valor de la bandera a false
+                        //Por cada digito encontrado, lo añade a la cadena matriculaclean para
+                        //obtener la matricula sin el simbolo '+' y queden solo los digitos
                         switch (c)
                         {
 
@@ -188,23 +201,15 @@ namespace CadiAcceso
                         if (!numeros) break;
                     }
                     //Evaluamos la bandera numeros, si es verdadero quiere decir que todo es correcto
+                    //Y llamamos a la función Consulta con sobrecarga de string
                     //Si es falso quiere decir que se ingreso un caracter incorrecto
-                    if (numeros)
-                    {
-                        
-
-                        Consulta(matriculaclean);
-                        //consulta(txtMatricula.Text);
-                    }
-                    else
-                    {
-                        MessageBox.Show("El código escaneado no es valido, intente de nuevo");
-                        txtMatricula.Text = "";
-                    }
+                    if (numeros) Consulta(matriculaclean);
+                    else MessageBox.Show("El código escaneado no es valido, intente de nuevo");
+                    
                     txtMatricula.Text = "";
                     txtMatricula.IsReadOnly = true;
                 } }
-            else if(e.Key == System.Windows.Input.Key.Add)
+            else if(e.Key == System.Windows.Input.Key.OemPlus)
             {
                 txtMatricula.Text = "";
                 txtMatricula.IsReadOnly = false;
@@ -225,7 +230,7 @@ namespace CadiAcceso
         private void Consulta(string matricula)
         {
             string nombre, apellidos, semestre, modalidad, carrera;
-            bool error = true;
+            bool error = false;
             //tu codigo de consulta empieza aquí
 
 
@@ -249,10 +254,13 @@ namespace CadiAcceso
             }
             //Aquí termina tu codigo de consulta
         }
+        
         private void MostrarDatos()
         {
+            
             lblNombre.Foreground = new SolidColorBrush(Color.FromRgb(242,46,98));
             lblNombre.Content = "No se encontró la matricula escaneada, intente de nuevo";
+            imgAlumno.Stroke = new SolidColorBrush(Color.FromRgb(242, 46, 98));
             tmr.Start();
         }
         private void MostrarDatos(string nombre, string apellidos, string semestre, string matricula, string modalidad, string carrera)
@@ -288,6 +296,8 @@ namespace CadiAcceso
             lblMatricula.Content = "";
             lblNombre.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             imgAlumno.Fill = new SolidColorBrush(Color.FromRgb(57, 62, 89));
+            imgAlumno.Stroke = null;
+            
         }
     }
 }
