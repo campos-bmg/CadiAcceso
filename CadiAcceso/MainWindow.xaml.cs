@@ -33,6 +33,7 @@ namespace CadiAcceso
             //Se activa el foco en el cuadro de texto invisible...
             //...para que el escaner escriba en el sin acción por...
             //...parte del usuario
+            int hola = 1;
             txtMatricula.IsReadOnly = true;
             txtMatricula.Focus();
             ClearData();
