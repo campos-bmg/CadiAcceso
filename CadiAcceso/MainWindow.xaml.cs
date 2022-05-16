@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace CadiAcceso
 {
@@ -11,7 +13,7 @@ namespace CadiAcceso
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
- 
+
     public partial class MainWindow : Window
     {
         private int factorEscalado = 18;
@@ -27,7 +29,8 @@ namespace CadiAcceso
         }
         public MainWindow()
         {
-            DataContext = this;
+
+        DataContext = this;
             //Se crea la ventana principal (y única)
             InitializeComponent();
             //Se activa el foco en el cuadro de texto invisible...
@@ -42,12 +45,12 @@ namespace CadiAcceso
             tmr.Tick += Tmr_Tick;
         }
 
-            /*
-             Al cambiar el tamaño de la ventana (aumentar o reducir)
-            Se manda a llamar a la función Reescalado que cambia el tamaño
-            del texto acorde al tamaño de la ventana, le pasamos como parametro
-            el tamaño actual de la ventana para que realice el calculo
-             */
+        /*
+         Al cambiar el tamaño de la ventana (aumentar o reducir)
+        Se manda a llamar a la función Reescalado que cambia el tamaño
+        del texto acorde al tamaño de la ventana, le pasamos como parametro
+        el tamaño actual de la ventana para que realice el calculo
+         */
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         { 
             Reescalado(Ventana.Height);   
@@ -228,12 +231,43 @@ namespace CadiAcceso
         }
         //Aqui te paso la string matricula como parametro para tu metodo, para que con ella hagas la
         //busqueda en la base de datos
+
+        
         private void Consulta(string matricula)
         {
-            string nombre, apellidos, semestre, modalidad, carrera;
+
+            string nombre, semestre, modalidad, carrera;
             bool error = false;
             //tu codigo de consulta empieza aquí
 
+            MySql.Data.MySqlClient.MySqlConnection conec;
+            string datos = "server='72.29.120.15'; user id='calormex_gio'; password='hardstyle8.0';database='calormex_ugmex'";
+            try
+            {
+                conec = new MySql.Data.MySqlClient.MySqlConnection();
+                conec.ConnectionString = datos;
+                conec.Open();
+                MySqlCommand coman2 = new MySqlCommand();
+                coman2.Connection = conec;
+                coman2.CommandText = "SELECT Nombre, Semestre, Modalidad, Carrera FROM Alumnos WHERE Matricula like'" + matricula + "'";
+                MySqlDataReader Read = coman2.ExecuteReader();
+                if (Read.Read())
+                {
+                    nombre = Read.GetString(0);
+                    semestre = Read.GetString(1); ;
+                    modalidad = Read.GetString(2);
+                    carrera = Read.GetString(3);
+                    MostrarDatos(nombre, semestre, matricula, modalidad, carrera);
+                    
+                }
+                conec.Close();            
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            
 
             //Asigna valor a la variable error, le asignas true si es que no se encontró nada en la base de datos
             //o si en general no se pudo conectar con la base de datos, le asignas false cuando si se encuentre algo en
@@ -244,18 +278,14 @@ namespace CadiAcceso
             }
             //Aqui quitas los valores que puse y pones los valores que obtuviste de la base
             //de datos en las variables correspondientes
-            else
+            /*else
             {
-                nombre = "Juan";
-                apellidos = "Perez Prado";
-                semestre = "Sexto";
-                modalidad = "Escolarizado";
-                carrera = "Ingeniería en sistemas";
-                MostrarDatos(nombre, apellidos, semestre, matricula, modalidad, carrera); 
-            }
+                
+                
+            } */
             //Aquí termina tu codigo de consulta
         }
-        
+
         private void MostrarDatos()
         {
             
@@ -264,10 +294,10 @@ namespace CadiAcceso
             imgAlumno.Stroke = new SolidColorBrush(Color.FromRgb(242, 46, 98));
             tmr.Start();
         }
-        private void MostrarDatos(string nombre, string apellidos, string semestre, string matricula, string modalidad, string carrera)
+        private void MostrarDatos(string nombre, string semestre, string matricula, string modalidad, string carrera)
         {
             contador = 0;
-            lblNombre.Content = nombre+" "+apellidos;
+            lblNombre.Content = nombre;
             lblSemestre.Content = semestre+" semestre";
             lblMatricula.Content = matricula;
             lblModalidad.Content = modalidad;
