@@ -24,7 +24,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Fonts\Oswald-Medium.ttf" />
     <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MySQL\Connector NET 8.0\Assemblies\net5.0\MySql.Data.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 8.0.28\Assemblies\net5.0\MySql.Data.dll</HintPath>
     </Reference>
     <Resource Include="img\1x\Close.png" />
     <Resource Include="img\1x\Close_hover.png" />

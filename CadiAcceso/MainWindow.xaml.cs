@@ -36,7 +36,6 @@ namespace CadiAcceso
             //Se activa el foco en el cuadro de texto invisible...
             //...para que el escaner escriba en el sin acción por...
             //...parte del usuario
-            int hola = 1;
             txtMatricula.IsReadOnly = true;
             txtMatricula.Focus();
             ClearData();
@@ -162,7 +161,6 @@ namespace CadiAcceso
         //Cada que se levanta la presión de una tecla del teclado dentro del textbox txtMatricula
         private void txtMatricula_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            lblMatricula.Content = e.Key;
             //Se evalua, si la tecla recién presionada es igual a Enter
             //Esto funciona por que el lector de codigo de barras debe envíar un
             //Enter cada que realiza una lectura
@@ -208,7 +206,7 @@ namespace CadiAcceso
                     //Y llamamos a la función Consulta con sobrecarga de string
                     //Si es falso quiere decir que se ingreso un caracter incorrecto
                     if (numeros) Consulta(matriculaclean);
-                    else MessageBox.Show("El código escaneado no es valido, intente de nuevo");
+                    else MostrarDatos();
                     
                     txtMatricula.Text = "";
                     txtMatricula.IsReadOnly = true;
